@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Notify Co-host</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <style>
+      * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #F0F2F5;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.chat-window {
+  width: 80%;
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.chat-header {
+  background-color: #003566;
+  color: white;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.chat-header h1 {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.chat-messages {
+  padding: 20px;
+  flex-grow: 1;
+  overflow-y: scroll;
+}
+
+.chat-message {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-message p {
+  margin: 0;
+  padding: 10px;
+  border-radius: 20px;
+  max-width: 80%;
+}
+
+.chat-message.sent p {
+  background-color: #E0E0E0;
+  align-self: flex-end;
+}
+
+.chat-message.received p {
+  
+  background-color: #DCF8C6;
+  align-self: flex-start;
+}
+
+.chat-input {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+}
+
+.chat-input input[type="text"] {
+  flex-grow: 1;
+  padding: 10px;
+  border-radius: 20px;
+  border: none;
+  background-color: #F0F2F5;
+  margin-right: 20px;
+}
+
+.send-button {
+  padding: 10px;
+  border-radius: 20px;
+  border: none;
+  background-color: #003566;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.send-button:hover {
+  background-color: #00244E;
+}
+
+      /* Reset some styles */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      
+      /* Set some base styles */
+      body {
+        font-family: sans-serif;
+        font-size: 16px;
+        line-height: 1.5;
+      }
+      
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 16px;
+      }
+      
+      h1 {
+        text-align: center;
+        margin-bottom: 24px;
+      }
+      
+      /* Style the chat thread */
+      .chat-thread {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+        max-height: 400px;
+        overflow-y: scroll;
+      }
+      
+      .chat-thread li {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        max-width: 400px;
+        border-radius: 8px;
+        padding: 8px;
+        background-color: #EEE;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      
+      .chat-thread li.sent {
+        align-self: flex-end;
+        background-color: #DFF;
+      }
+      
+      .chat-thread li.received {
+        align-self: flex-start;
+        background-color: #EEE;
+      }
+      
+      .chat-thread .timestamp {
+        font-size: 0.8em;
+        text-align: right;
+        color: #999;
+      }
+      
+      /* Style the notification buttons */
+      button {
+        font-size: 1em;
+        font-weight: bold;
+        border-radius: 8px;
+        padding: 8px 16px;
+        margin: 8px;
+        background-color: #06F;
+        color: #FFF;
+        border: none;
+        cursor: pointer;
+      }
+      
+      button:hover {
+        background-color: #09F;
+      }
+</style>
+    <script>
+      const socket = io.connect();
+      document.addEventListener("DOMContentLoaded", function(event) { 
+        // Connect to the server via Socket.IO
+      
+        // Get a reference to the notification list
+        const notificationList = document.getElementById('notification-list');
+        
+        // Listen for the 'notification' event
+        socket.on('notification', (data) => {
+           // Create a new list item for the notification
+          const listItem = document.createElement('li');
+          
+          // Add the notification message and timestamp to the list item
+          const now = new Date();
+          const timestamp = `${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
+          const message = `${data.notification}`;
+          listItem.innerText = message;
+          listItem.classList.add('received');
+          const timestampNode = document.createElement('div');
+          timestampNode.classList.add('timestamp');
+          timestampNode.innerText = timestamp;
+          listItem.appendChild(timestampNode);
+          
+          // Add the list item to the notification list
+          notificationList.appendChild(listItem);
+           // Scroll to the bottom of the notification list
+        notificationList.scrollTop = notificationList.scrollHeight;
+        });
+      });
+
+      function notify(notification) {
+  socket.emit('notify', {notification: notification});
+  const notificationList = document.getElementById('notification-list');
+  const now = new Date();
+  const timestamp = `${now.getHours()}:${now.getMinutes()}`;
+  const senderClass = "sent";
+  const receiverClass = "received";
+
+  // Add a new list item to the notification list
+  const listItem = document.createElement('li');
+  notificationList.appendChild(listItem);
+
+  // Add a div to hold the message content and timestamp
+  const messageDiv = document.createElement('div');
+  messageDiv.classList.add('message');
+  listItem.appendChild(messageDiv);
+
+  // Add the message content to the message div
+  const messageContent = document.createElement('div');
+  messageContent.classList.add('message-content');
+  messageContent.innerText = notification;
+  messageDiv.appendChild(messageContent);
+
+  // Add the timestamp to the message div
+  const messageTimestamp = document.createElement('div');
+  messageTimestamp.classList.add('timestamp');
+  messageTimestamp.innerText = timestamp;
+  messageDiv.appendChild(messageTimestamp);
+
+  // Add a class to the list item to indicate the sender or receiver
+
+    listItem.classList.add(senderClass);
+
+
+  // Scroll to the bottom of the notification list
+  notificationList.scrollTop = notificationList.scrollHeight;
+}
+    </script>
+  </head>
+  <body>
+    <div class="container">
+    <div class="chat-window">
+      <div class="chat-header">
+        <h1>Notify Co-host</h1>
+      </div>
+          <div class="chat-input">
+        <button onclick="notify('your turn')">Your Turn</button>
+        <button onclick="notify('I have a follow up')">I Have a Follow Up</button>
+        <button onclick="notify('let\'s end the call')">Let's End the Call</button>
+        <button onclick="notify('Ack')">Ack</button>
+      </div>
+      
+      <div class="chat-messages chat-thread" id="notification-list">
+      </div>
+  
+    </div>
+  </div>
+  </body>
+</html>
