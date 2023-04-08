@@ -13,3 +13,5 @@ I'm currently deploying this on replit, but you can also run it directly with:
 ```bash
 node index.js
 ```
+
+If you're here, you might like the podcast that this project was built for: [The Hacking Open Source Business Podcast](https://www.youtube.com/@opensourcebusiness).
