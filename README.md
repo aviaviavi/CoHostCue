@@ -4,6 +4,8 @@ An ad-hoc app for a very specific problem: If you co-host an interview-style pod
 
 Hitting the root page of the app `/` to create a new "studio" with a random ID. Share that link with your cohost, cue, and be cued!
 
+This code-base is almost entirely AI-written! Only small tweaks and fixes were done by hand.
+
 #### Running
 
 I'm currently deploying this on replit, but you can also run it directly with:
