@@ -34,7 +34,7 @@ body {
   background-color: #003566;
   color: white;
   padding: 20px;
-  display: flex;
+  display: block;
   justify-content: center;
   align-items: center;
 }
@@ -186,9 +186,18 @@ body {
       }
 </style>
     <script>
-      const socket = io.connect();
-      document.addEventListener("DOMContentLoaded", function(event) { 
         // Connect to the server via Socket.IO
+      const socket = io.connect();      
+      document.addEventListener("DOMContentLoaded", function(event) { 
+                    // Get the studio ID from the URL
+      const studioId = window.location.pathname.substring(1);
+      
+      // Join the studio with the provided ID
+      socket.emit('join-studio', { studioId: studioId });
+      
+      // Display the studio ID
+      const studioIdDisplay = document.getElementById('studio-id');
+      studioIdDisplay.innerText = `Studio ID: ${studioId}`;
       
         // Get a reference to the notification list
         const notificationList = document.getElementById('notification-list');
@@ -260,6 +269,8 @@ body {
     <div class="chat-window">
       <div class="chat-header">
         <h1>Notify Co-host</h1>
+        <br>
+        <div id="studio-id" style="text-align: center; margin-bottom: 20px;"></div>
       </div>
           <div class="chat-input">
         <button onclick="notify('your turn')">Your Turn</button>
