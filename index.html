@@ -3,15 +3,32 @@
   <head>
     <title>Notify Co-host</title>
     <script src="/socket.io/socket.io.js"></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
       * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
-
+      
+:root {
+  --primary-color: #264653;
+  --secondary-color: #2a9d8f;
+  --accent-color: #f4a261;
+  --background-color: #F0F2F5;
+  --sent-message-color: #2a9d8f;
+  --received-message-color: #A7F3D0;
+  --button-hover-color: #2563EB;
+}
+      
 body {
   background-color: #F0F2F5;
+  padding: 20px;
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
 }
 
 .container {
@@ -28,10 +45,12 @@ body {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  max-width: 800px;
+
 }
 
 .chat-header {
-  background-color: #003566;
+  background-color: var(--primary-color);
   color: white;
   padding: 20px;
   display: block;
@@ -61,16 +80,16 @@ body {
   padding: 10px;
   border-radius: 20px;
   max-width: 80%;
+  line-height: 1.4;
 }
 
 .chat-message.sent p {
-  background-color: #E0E0E0;
+  background-color: var(--sent-message-color);
   align-self: flex-end;
 }
 
 .chat-message.received p {
-  
-  background-color: #DCF8C6;
+  background-color: var(--received-message-color);
   align-self: flex-start;
 }
 
@@ -93,15 +112,31 @@ body {
   padding: 10px;
   border-radius: 20px;
   border: none;
-  background-color: #003566;
+  background-color: var(--accent-color);
   color: white;
   font-size: 16px;
   font-weight: bold;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .send-button:hover {
-  background-color: #00244E;
+  background-color: var(--button-hover-color);
+}
+
+      /* Add custom scrollbar */
+.chat-messages::-webkit-scrollbar {
+  width: 10px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 5px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+  background-color: #f0f2f5;
+  border-radius: 5px;
 }
 
       /* Reset some styles */
@@ -112,12 +147,7 @@ body {
       }
       
       /* Set some base styles */
-      body {
-        font-family: sans-serif;
-        font-size: 16px;
-        line-height: 1.5;
-      }
-      
+
       .container {
         max-width: 800px;
         margin: 0 auto;
@@ -154,7 +184,7 @@ body {
       
       .chat-thread li.sent {
         align-self: flex-end;
-        background-color: #DFF;
+        background-color: var(--sent-message-color);
       }
       
       .chat-thread li.received {
