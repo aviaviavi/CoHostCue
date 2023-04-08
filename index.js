@@ -2,11 +2,14 @@
 const express = require('express');
 const http = require('http');
 const socketIO = require('socket.io');
+const path = require('path');
 
 // Set up the Express app and the server
 const app = express();
 const server = http.Server(app);
 const io = socketIO(server);
+
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Create a map to store the mapping of studio ID to its connected users
 const studios = new Map();

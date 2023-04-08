@@ -222,47 +222,48 @@ body {
           notificationList.appendChild(listItem);
            // Scroll to the bottom of the notification list
         notificationList.scrollTop = notificationList.scrollHeight;
+              // Play the notification sound
+         const notificationSound = document.getElementById('notification-sound');
+         notificationSound.play();
         });
-      });
+      })
 
-      function notify(notification) {
-  socket.emit('notify', {notification: notification});
-  const notificationList = document.getElementById('notification-list');
-  const now = new Date();
-  const timestamp = `${now.getHours()}:${now.getMinutes()}`;
-  const senderClass = "sent";
-  const receiverClass = "received";
-
-  // Add a new list item to the notification list
-  const listItem = document.createElement('li');
-  notificationList.appendChild(listItem);
-
-  // Add a div to hold the message content and timestamp
-  const messageDiv = document.createElement('div');
-  messageDiv.classList.add('message');
-  listItem.appendChild(messageDiv);
-
-  // Add the message content to the message div
-  const messageContent = document.createElement('div');
-  messageContent.classList.add('message-content');
-  messageContent.innerText = notification;
-  messageDiv.appendChild(messageContent);
-
-  // Add the timestamp to the message div
-  const messageTimestamp = document.createElement('div');
-  messageTimestamp.classList.add('timestamp');
-  messageTimestamp.innerText = timestamp;
-  messageDiv.appendChild(messageTimestamp);
-
-  // Add a class to the list item to indicate the sender or receiver
-
+  function notify(notification) {
+    socket.emit('notify', {notification: notification});
+    const notificationList = document.getElementById('notification-list');
+    const now = new Date();
+    const timestamp = `${now.getHours()}:${now.getMinutes()}`;
+    const senderClass = "sent";
+    const receiverClass = "received";
+  
+    // Add a new list item to the notification list
+    const listItem = document.createElement('li');
+    notificationList.appendChild(listItem);
+  
+    // Add a div to hold the message content and timestamp
+    const messageDiv = document.createElement('div');
+    messageDiv.classList.add('message');
+    listItem.appendChild(messageDiv);
+  
+    // Add the message content to the message div
+    const messageContent = document.createElement('div');
+    messageContent.classList.add('message-content');
+    messageContent.innerText = notification;
+    messageDiv.appendChild(messageContent);
+  
+    // Add the timestamp to the message div
+    const messageTimestamp = document.createElement('div');
+    messageTimestamp.classList.add('timestamp');
+    messageTimestamp.innerText = timestamp;
+    messageDiv.appendChild(messageTimestamp);
+  
+    // Add a class to the list item to indicate the sender or receiver
     listItem.classList.add(senderClass);
-
-
-  // Scroll to the bottom of the notification list
-  notificationList.scrollTop = notificationList.scrollHeight;
-}
-    </script>
+  
+    // Scroll to the bottom of the notification list
+    notificationList.scrollTop = notificationList.scrollHeight;
+  }
+  </script>
   </head>
   <body>
     <div class="container">
@@ -284,5 +285,6 @@ body {
   
     </div>
   </div>
+  <audio id="notification-sound" src="/notification-sound.mp3" preload="auto"></audio>
   </body>
 </html>
